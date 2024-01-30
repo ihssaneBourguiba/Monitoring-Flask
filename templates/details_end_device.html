@@ -1,0 +1,13 @@
+<!-- templates/details_end_device.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Détails de l'End Device</h2>
+  <p>IP Address: {{ end_device.ip_address }}</p>
+  <p>MAC Address: {{ end_device.mac_address }}</p>
+  <p>Longitude: {{ end_device.longitude }}</p>
+  <p>Latitude: {{ end_device.latitude }}</p>
+  <!-- Ajoutez d'autres informations nécessaires -->
+
+  <!-- Ajoutez ici le code HTML pour afficher les détails de l'end device -->
+{% endblock %}

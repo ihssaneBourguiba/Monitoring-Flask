@@ -1,0 +1,14 @@
+<!-- templates/connexion.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Connexion</h2>
+  <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.username.label }}<br>
+    {{ form.username(size=20) }}<br><br>
+    {{ form.password.label }}<br>
+    {{ form.password(size=20) }}<br><br>
+    <input type="submit" value="Se connecter">
+  </form>
+{% endblock %}

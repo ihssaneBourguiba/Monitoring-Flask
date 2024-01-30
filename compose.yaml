@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      contexte: .
+    ports:
+      - 8080:8080
+    depends on:configs:
+      - db
+    volumes:
+      - ./:/app:rw
+
+  db:
+    image: mysql
+    ports:
+      - 36000:3306
+    environements:
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - ./db:/var/lib/mysql
+    

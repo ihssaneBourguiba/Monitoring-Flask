@@ -1,0 +1,81 @@
+<!-- templates/carte_end_devices.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Carte des End Devices</h2>
+  <!-- Include necessary map scripts or libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <!-- Set the map container -->
+  <div id="map" style="height: 500px;"></div>
+  <!-- Container for end device details -->
+  <div id="details-container"></div>
+
+  <!-- Display end devices on the map -->
+  <script>
+    var endDevices = JSON.parse('{{ end_devices_json  | safe }}');
+
+
+    // Initialize the map
+    var map = L.map('map').setView([0, 0], 2);  // Set the initial center and zoom
+
+    // Add a tile layer (you may need to replace this URL with your own)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add markers for each end device
+    endDevices.forEach(function(endDevice) {
+        var marker = L.marker([endDevice.latitude, endDevice.longitude]).addTo(map);
+        // Add a popup with the end device information
+        // Assume snmpData is an object containing SNMP data for the current EndDevice
+        var snmpData = {}; // Replace this with actual SNMP data
+
+        // Build the popup content
+        var popupContent = '<strong>IP Address:</strong> ' + endDevice.ip_address +
+                          '<br><strong>MAC Address:</strong> ' + endDevice.mac_address;
+
+        // Add SNMP data to the popup content
+        for (var oid in snmpData) {
+            popupContent += '<br><strong>' + oid + ':</strong> ' + snmpData[oid];
+        }
+
+// ...
+
+// Add a popup with the end device information and "Details" link
+var popupContent = '<strong>IP Address:</strong> ' + endDevice.ip_address +
+                  '<br><strong>MAC Address:</strong> ' + endDevice.mac_address +
+                  '<br><a href="#" class="details-link" data-id="' + endDevice.id + '">Details</a>';
+
+// Bind the popup with the initial content
+marker.bindPopup(popupContent);
+
+// Add a click event listener to fetch SNMP data when the "Details" link is clicked
+marker.on('click', function() {
+  $.ajax({
+    url: '/get_snmp_data/' + endDevice.id,
+    type: 'GET',
+    success: function(snmpData) {
+      // Update the popup content with the retrieved SNMP data
+      var updatedPopupContent = popupContent;
+      for (var oid in snmpData) {
+        updatedPopupContent += '<br><strong>' + oid + ':</strong> ' + snmpData[oid];
+      }
+      // Update the marker's popup content
+      marker.setPopupContent(updatedPopupContent);
+    },
+    error: function() {
+      console.error('Error fetching SNMP data');
+    }
+  });
+});
+
+// ...
+
+
+      });
+
+  </script>
+{% endblock %}

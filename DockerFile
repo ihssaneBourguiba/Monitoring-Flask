@@ -1,0 +1,9 @@
+FROM python
+
+    WORKDIR /app
+    COPY . /app
+    RUN pip install -r requirement.txt
+    ENV PORT 8080
+    EXPOSE 8080
+
+    ENTRYPOINT ["python3"]
