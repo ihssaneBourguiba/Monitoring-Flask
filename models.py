@@ -26,3 +26,12 @@ class EndDevice(db.Model):
     longitude = db.Column(db.Float, nullable=True)
     latitude = db.Column(db.Float, nullable=True)
     snmp_enabled = db.Column(db.Boolean, nullable=False, default=False)
+
+
+class IotDevices(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mac = db.Column(db.String(17), nullable=False)
+    temp = db.Column(db.Float, nullable=True)
+    datetime = db.Column(db.String(20), nullable=True)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)

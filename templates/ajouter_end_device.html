@@ -1,27 +1,28 @@
-<!-- templates/ajouter_end_device.html -->
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>{{ title }}</h2>
-  <form method="post">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      {{ form.ip_address.label }} {{ form.ip_address(size=32, class="form-control") }}
-    </div>
-    <div class="form-group">
-      {{ form.mac_address.label }} {{ form.mac_address(size=32, class="form-control") }}
-    </div>
-    <div class="form-group">
-      {{ form.longitude.label }} {{ form.longitude(class="form-control") }}
-    </div>
-    <div class="form-group">
-      {{ form.latitude.label }} {{ form.latitude(class="form-control") }}
-    </div>
-    <div class="form-group">
-      {{ form.snmp_enabled.label }} {{ form.snmp_enabled() }}
-    </div>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-primary") }}
-    </div>
-  </form>
+  <div class="container mt-5">
+    <h2>{{ title }}</h2>
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.ip_address.label }} {{ form.ip_address(size=32, class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.mac_address.label }} {{ form.mac_address(size=32, class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.longitude.label }} {{ form.longitude(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.latitude.label }} {{ form.latitude(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.snmp_enabled.label }} {{ form.snmp_enabled() }}
+      </div>
+      <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
 {% endblock %}

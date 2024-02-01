@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Carte des IoT Devices</h2>
+    <!-- Include necessary map scripts or libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Set the map container -->
+    <div id="map" style="height: 500px;"></div>
+    <!-- Container for IoT device details -->
+    <div id="details-container"></div>
+
+    <!-- Display IoT devices on the map -->
+    <script>
+      var iotDevices = JSON.parse('{{ iot_devices_json | safe }}');
+
+      // Initialize the map
+      var map = L.map('map').setView([0, 0], 2);  // Set the initial center and zoom
+
+      // Add a tile layer (you may need to replace this URL with your own)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Add markers for each IoT device
+      iotDevices.forEach(function(iotDevice) {
+          var marker = L.marker([iotDevice.latitude, iotDevice.longitude]).addTo(map);
+          // Assume iotDeviceData is an object containing IoT device data for the current IoTDevice
+          var iotDeviceData = {}; // Replace this with actual IoT device data
+
+          // Build the popup content
+          var popupContent = '<strong>MAC Address:</strong> ' + iotDevice.mac +
+                            '<br><strong>Temperature:</strong> ' + iotDevice.temp +
+                            '<br><strong>Datetime:</strong> ' + iotDevice.datetime;
+
+          // Add IoT device data to the popup content
+          for (var key in iotDeviceData) {
+              popupContent += '<br><strong>' + key + ':</strong> ' + iotDeviceData[key];
+          }
+
+          // Add a popup with the IoT device information and "Details" link
+          var detailsLink = popupContent + '<br><a href="#" class="details-link" data-id="' + iotDevice.id + '">Details</a>';
+          marker.bindPopup(detailsLink);
+
+          // Add click event listener for "Details" link
+          marker.on('popupopen', function() {
+              $('.details-link').click(function(e) {
+                  e.preventDefault();
+                  
+                  // Extract the IoT device details
+                  var deviceId = $(this).data('id');
+                  var iotDevice = iotDevices.find(device => device.id === deviceId);
+
+                  // Redirect to the prediction page with latitude and longitude parameters
+                  window.location.href = '/prediction/' + iotDevice.id;
+              });
+          });
+      });
+    </script>
+
+    <!-- Button to toggle temperature chart visibility -->
+    <button class="btn btn-primary mt-3" id="toggle-chart-btn">Toggle Temperature Chart</button>
+
+    <!-- Display Matplotlib chart for temperature changes (initially hidden) -->
+    <div id="temperature-chart" style="display: none;">
+      <h2>Temperature Changes</h2>
+      <img src="{{ url_for('static', filename='temperature_chart.png') }}" alt="Temperature Chart">
+    </div>
+
+    <!-- Toggle chart visibility script -->
+    <script>
+      $(document).ready(function() {
+        $('#toggle-chart-btn').click(function() {
+          $('#temperature-chart').toggle();
+        });
+      });
+    </script>
+  </div>
+{% endblock %}

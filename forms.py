@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField , FloatField , PasswordField, SubmitField, BooleanField
+from wtforms import StringField , FloatField , PasswordField, SubmitField, BooleanField,DateField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from models import User, EndDevice
 
@@ -28,3 +28,14 @@ class AjouterEndDeviceForm(FlaskForm):
     latitude = StringField('Latitude')
     snmp_enabled = BooleanField('SNMP Enabled')
     submit = SubmitField('Ajouter un appareil')
+
+class AjouterIoTForm(FlaskForm):
+    mac = StringField('Adresse MAC', validators=[DataRequired()])
+    latitude = FloatField('Latitude', validators=[DataRequired()])
+    longitude = FloatField('Longitude', validators=[DataRequired()])
+    submit = SubmitField('Ajouter')
+
+class PredictionForm(FlaskForm):
+    start_date = DateField('Start Date', validators=[DataRequired()], format='%Y-%m-%d')
+    end_date = DateField('End Date', validators=[DataRequired()], format='%Y-%m-%d')
+    submit = SubmitField('Visualiser les prédictions')
